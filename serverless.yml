@@ -1,0 +1,19 @@
+service:
+  name: aws-nodejs-ecma-script
+
+# Add the serverless-webpack plugin
+plugins:
+  - serverless-webpack
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+functions:
+  vrt_api_mapper:
+    handler: mapper.handler
+    events:
+      - http:
+          method: get
+          cors: true
+          path: '/'
