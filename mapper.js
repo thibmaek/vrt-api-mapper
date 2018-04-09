@@ -1,33 +1,42 @@
 import fetch from 'node-fetch';
 
-const mapResponse = airing => {
+import { STUBRU } from './channels';
+
+const mapResponse = ({ properties, channelCode, onairType, startDate, endDate }) => {
+  const artist = properties.filter(prop => prop.key === `ARTISTNAME`)[0].value;
+  const title = properties.filter(prop => prop.key === `TITLE`)[0].value;
+
   return {
-    artist: airing.properties.filter(prop => prop.key === `ARTISTNAME`)[0].value,
+    artist,
     channel: {
-      code: airing.channelCode,
+      code: channelCode,
     },
-    title: airing.properties.filter(prop => prop.key === `TITLE`)[0].value,
-    type: airing.onairType,
+    start: startDate,
+    stop: endDate,
+    title,
+    trackName: `${artist} - ${title}`,
+    type: onairType,
   };
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export const handler = async (event, context, callback) => {
-  const res = await fetch(`https://services.vrt.be/playlist/onair?channel_code=41`, {
+export const handler = async (_, ctx, done) => {
+  const { onairs } = await (await fetch(`https://services.vrt.be/playlist/onair?channel_code=${STUBRU}`, {
     headers: {
       accept: `application/vnd.playlist.vrt.be.noa_1.0+json`,
     },
-  }).then(r => r.json());
+  })).json();
 
-  const body = res.onairs.map(mapResponse);
+  const body = onairs.map(mapResponse);
 
   const response = {
     body: JSON.stringify({
       current: body.find(airing => airing.type === `NOW`),
       previous: body.find(airing => airing.type === `PREVIOUS`),
+      timestamp: new Date().toISOString(),
     }),
     statusCode: 200,
   };
 
-  callback(null, response);
+  done(null, response);
 };
