@@ -1,5 +1,6 @@
 {
-  "name": "stubru-api-mapper",
+  "name": "vrt-radio-api-mapper",
+  "description": "API mapper for VRT radio endpoints",
   "version": "1.0.0",
   "scripts": {
     "dev": "sls invoke local -f vrt_api_mapper"
