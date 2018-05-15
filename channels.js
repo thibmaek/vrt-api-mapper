@@ -1,2 +1,6 @@
-/* eslint-disable import/prefer-default-export */
-export const STUBRU = 41;
+export default [
+  {
+    code: 41,
+    names: [`stubru`, `stu-bru`, `studio-brussel`],
+  },
+];
