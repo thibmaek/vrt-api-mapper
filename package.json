@@ -3,7 +3,9 @@
   "description": "API mapper for VRT radio endpoints",
   "version": "1.0.0",
   "scripts": {
-    "dev": "sls invoke local -f vrt_api_mapper"
+    "start": "sls offline",
+    "dev": "sls invoke local -f vrt_api_mapper",
+    "deploy": "sls deploy"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
@@ -13,6 +15,7 @@
     "babel-preset-env": "^1.6.0",
     "eslint": "^4.19.1",
     "eslint-config-thibmaek": "^1.0.3",
+    "serverless-offline": "^3.21.1",
     "serverless-webpack": "^3.1.1",
     "webpack": "^3.3.0"
   },
