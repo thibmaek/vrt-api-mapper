@@ -19,26 +19,24 @@ const mapResponse = ({ properties, channelCode, onairType, startDate, endDate })
   };
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export const handler = async (_, ctx, done) => {
-  const { code: channelCode } = getChannelFromName(`stu bru`);
+export const handler = async (event, ctx, done) => {
+  try {
+    const { code: channelCode } = getChannelFromName(event.pathParameters.channelCode);
+    const [program, playlist] = await Promise.all([
+      getCurrentProgram(channelCode),
+      getPlaylist(channelCode),
+    ]);
 
-  const [program, playlist] = await Promise.all([
-    getCurrentProgram(channelCode),
-    getPlaylist(channelCode),
-  ]);
+    const parsedResponse = playlist.onairs.map(mapResponse);
 
-  const parsedResponse = playlist.onairs.map(mapResponse);
-
-  const response = {
-    body: JSON.stringify({
-      current: parsedResponse.find(airing => airing.type === `NOW`),
-      previous: parsedResponse.find(airing => airing.type === `PREVIOUS`),
-      program: program.title,
-      timestamp: new Date().toISOString(),
-    }),
-    statusCode: 200,
-  };
-
-  done(null, response);
+    done(null, {
+      body: JSON.stringify({
+        current: parsedResponse.find(airing => airing.type === `NOW`),
+        previous: parsedResponse.find(airing => airing.type === `PREVIOUS`),
+        program: program.title,
+        timestamp: new Date().toISOString(),
+      }),
+      statusCode: 200,
+    });
+  } catch (error) { done(error); }
 };
