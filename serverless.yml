@@ -17,3 +17,7 @@ functions:
           method: get
           cors: true
           path: '/{channelCode}'
+          request:
+            parameters:
+              paths:
+                channelCode: true
