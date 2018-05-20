@@ -2,6 +2,7 @@ service:
   name: aws-nodejs-ecma-script
 
 plugins:
+  - serverless-offline
   - serverless-webpack
 
 provider:
@@ -15,4 +16,4 @@ functions:
       - http:
           method: get
           cors: true
-          path: '/'
+          path: '/{channelCode}'
