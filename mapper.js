@@ -2,6 +2,8 @@ import getChannelFromName from './lib/getChannelFromName';
 import { getCurrentProgram } from './lib/getProgram';
 import getPlaylist from './lib/getPlaylist';
 
+import channels from './channels';
+
 const mapResponse = ({ properties, channelCode, onairType, startDate, endDate }) => {
   const artist = properties.filter(prop => prop.key === `ARTISTNAME`)[0].value;
   const title = properties.filter(prop => prop.key === `TITLE`)[0].value;
@@ -38,5 +40,16 @@ export const handler = async (event, ctx, done) => {
       }),
       statusCode: 200,
     });
-  } catch (error) { done(error); }
+  } catch (error) {
+    done(null, {
+      body: JSON.stringify({
+        statusCode: 400,
+        error: `Invalid channel slug supplied`,
+        request: {
+          channel: event.pathParameters.channelCode,
+        },
+        availableChannels: channels,
+      }),
+    });
+  }
 };
