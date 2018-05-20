@@ -5,7 +5,7 @@
   "scripts": {
     "start": "sls offline",
     "dev": "sls invoke local -f vrt_api_mapper",
-    "deploy": "sls deploy"
+    "deploy": "sls deploy function -f vrt_api_mapper"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
